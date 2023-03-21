@@ -30,7 +30,7 @@ server {
 	# Everything is a 404
 	location / {
 		if ($request_method = POST) {
-		proxy_pass http://127.0.0.1:7777/;
+		proxy_pass http://127.0.0.1:7777;
 		}
 		if ($request_method = GET) {
 			root=/var/www/html/healthcheck;
