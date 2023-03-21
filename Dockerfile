@@ -22,7 +22,8 @@ RUN apk --update add --no-cache --virtual .build-deps build-base libc-dev ruby-d
         gem install fluent-plugin-encrypt fluent-plugin-mail  fluent-plugin-snmp  fluent-plugin-secure-forward && \
         gem install nokogiri && \
  fluent-gem install fluent-plugin-s3 && \
- fluent-gem install fluent-plugin-influxdb-v2 --no-document && \
+ fluent-gem install fluent-plugin-couch --no-document && \
+f luent-gem install fluent-plugin-influxdb-v2 --no-document && \
         apk del  .build-deps
 #        gem install fluent-plugin-collectd-influxdb && \
 #        gem install fluent-plugin-collectd-concat && \
