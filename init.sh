@@ -66,5 +66,5 @@ while (true);do
 done ) & 
 
 echo starting caddy
-(sleep 0.5; cd /caddy;while (true);caddy run ;sleep 1 ;done)
+(sleep 0.5; cd /caddy;while (true);do caddy run ;sleep 1 ;done)
 #(sleep 0.5; cd /caddy;while (true);do su -s /bin/bash -c "caddy run" caddy ;sleep 1 ;done)
