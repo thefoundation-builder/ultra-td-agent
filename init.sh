@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+test -e /config || mkdir /config
 test -e /config/fluentd.conf || ( 
     [[ -z "$FLUENTBASECONF" ]] || echo "$FLUENTBASECONF"|base64 -d > /config/fluentd.conf
 )
