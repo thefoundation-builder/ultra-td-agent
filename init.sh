@@ -62,8 +62,9 @@ sleep 0.5
 mkdir /var/cache/fluentd
 chown fluentd:fluentd /var/cache/fluentd
 while (true);do 
-    su -s /bin/bash -c "fluentd -c /config/fluentd.conf" fluentd ;sleep 3
+   fluentd -c /config/fluentd.conf;sleep 3
 done ) & 
 
 echo starting caddy
-(sleep 0.5; cd /caddy;while (true);do su -s /bin/bash -c "caddy run" caddy ;sleep 1 ;done)
+(sleep 0.5; cd /caddy;while (true);caddy run ;sleep 1 ;done)
+#(sleep 0.5; cd /caddy;while (true);do su -s /bin/bash -c "caddy run" caddy ;sleep 1 ;done)
