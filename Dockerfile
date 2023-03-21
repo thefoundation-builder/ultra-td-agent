@@ -20,7 +20,7 @@ RUN apk --update add --no-cache --virtual .build-deps build-base libc-dev ruby-d
 RUN apk --update add --no-cache --virtual .build-deps build-base libc-dev ruby-dev && \
         gem install fluent-plugin-elasticsearch && \
         gem install fluent-plugin-encrypt fluent-plugin-mail  fluent-plugin-snmp  fluent-plugin-secure-forward && \
-        gem install nokogiri libxml && \
+        gem install nokogiri && \
  fluent-gem install fluent-plugin-s3 && \
  fluent-gem install fluent-plugin-influxdb-v2 --no-document && \
         apk del  .build-deps
