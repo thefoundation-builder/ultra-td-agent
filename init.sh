@@ -53,7 +53,7 @@ reverse_proxy :7777
 
 log
 
-' > /caddy/caddyfile 
+' > /caddy/Caddyfile 
 
 
 echo starting fluent 
