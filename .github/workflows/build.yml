@@ -68,6 +68,7 @@ jobs:
 
   build-base:
     runs-on: ubuntu-latest
+    container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
     env:
       QUAY_PASS: ${{ secrets.QUAY_PASS }}
       QUAY_USER: ${{ secrets.QUAY_USER }}
