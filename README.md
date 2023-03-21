@@ -15,4 +15,9 @@
 * fluent-plugin-s3
 * fluent-plugin-influxdb-v2
 * fluent-plugin-elasticsearch
+* fluent-plugin-couch
+
+
+---
+`caddy` aka `crappy` was changed against nginx , their config-way is just too senseless to even read it
 
