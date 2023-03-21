@@ -25,7 +25,7 @@ server {
 	location /healthcheck {
 		root /var/www/html;
 	}
-    acccess_log /dev/stdout;
+    access_log /dev/stdout;
     error_log /dev/stderr;
 	# Everything is a 404
 	location / {
