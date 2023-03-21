@@ -1,6 +1,6 @@
-# ultra-td-agent
-##### TD-Agent Docker image , alpine based , http basic auth + healtcheck endpoint 
-
+TD-Agent Docker image , alpine based , http basic auth + /healtcheck endpoint 
+===
+[![Build](https://github.com/thefoundation-builder/ultra-td-agent/actions/workflows/build.yml/badge.svg)](https://github.com/thefoundation-builder/ultra-td-agent/actions/workflows/build.yml)
 
 
 ## Variables 
