@@ -33,7 +33,7 @@ server {
 		proxy_pass http://127.0.0.1:7777;
 		}
 		if ($request_method = GET) {
-			root=/var/www/html/healthcheck;
+			root /var/www/html/healthcheck;
 		}
                 try_files $uri $uri/ =404;
   auth_basic "Restricted Content";
