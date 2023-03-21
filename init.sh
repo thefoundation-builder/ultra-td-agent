@@ -29,7 +29,12 @@ server {
     error_log /dev/stderr;
 	# Everything is a 404
 	location / {
+		if ($request_method = POST) {
 		proxy_pass http://127.0.0.1:7777/;
+		}
+		if ($request_method = GET) {
+			root=/var/www/html/healthcheck;
+		}
                 try_files $uri $uri/ =404;
   auth_basic "Restricted Content";
   auth_basic_user_file /etc/nginx/.htpasswd;

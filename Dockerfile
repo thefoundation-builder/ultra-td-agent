@@ -4,7 +4,8 @@ WORKDIR /scripts
 
 
 # Installing dependencies
-RUN apk --update add --no-cache ruby ruby-irb su-exec nginx caddy bash curl nano
+#RUN apk --update add --no-cache ruby ruby-irb su-exec nginx caddy bash curl nano
+RUN apk --update add --no-cache ruby ruby-irb su-exec bash curl nano
 # Creating user Fluentd
 RUN addgroup fluentd && \
         adduser -s /bin/false -G fluentd -S -D fluentd
@@ -25,8 +26,11 @@ RUN apk --update add --no-cache --virtual .build-deps build-base libc-dev ruby-d
  fluent-gem install fluent-plugin-couch --no-document && \
  fluent-gem install fluent-plugin-influxdb-v2 --no-document && \
         apk del  .build-deps
+
 #        gem install fluent-plugin-collectd-influxdb && \
 #        gem install fluent-plugin-collectd-concat && \
+RUN apk --update add --no-cache bash curl nano jq nginx git apache2-utils
+
 
 ## setup 
 

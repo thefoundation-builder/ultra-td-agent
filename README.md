@@ -6,7 +6,10 @@
 ## Variables 
 | Name | Thingy |
 |--|--|
- `AUTHPW` | basic auth password for the write user
+| `AUTHPW` | basic auth password for the write user |
+| `FLUENTBASECONF` | base64 encoded fluentd config file when things are server-less/volume-less |
+
+
 ## Fluent Plugins
 * fluent-plugin-mail
 * fluent-plugin-snmp
