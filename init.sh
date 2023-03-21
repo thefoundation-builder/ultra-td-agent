@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 test -e /config/fluentd.conf || ( 
     [[ -z "$FLUENTBASECONF" ]] || echo "$FLUENTBASECONF"|base64 -d > /config/fluentd.conf
 )
@@ -9,7 +10,7 @@ test -e /config/fluentd.conf || (
     echo "WARN: you did not set the AUTHPW environment aka the password for the write user ..using temporary value $AUTHPW" 
 echo -n ; } ;
 
-[[ -z "$AUTHPW" ]] && { echo "NO UNAUTHENTICATED MODE ALLOWED..EXITING..";         sleep 1;exit 2 ; } ;
+[[ -z "$AUTHPW" ]]           && { echo "NO UNAUTHENTICATED MODE ALLOWED..EXITING..";                                        sleep 1;exit 2 ; } ;
 test -e /config/fluentd.conf || { echo "/config/fluentd.conf missing .. mount as volume OR set FLUENTBASECONF ...EXITING..";sleep 1;exit 2 ; } ;
 
 htpasswd -bBc /etc/nginx/.htpasswd write "$AUTHPW"
