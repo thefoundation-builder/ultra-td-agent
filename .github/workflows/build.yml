@@ -124,7 +124,7 @@ jobs:
           password: ${{ secrets.QUAY_PASS }}
       - name: build images to quay
 #        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASS;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=libary;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh base-focal "
-        run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} --cache-from=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} -t $QU_REGISTRY_IMAGE  -f Dockerfile .
+        run: docker buildx build --platform ${PLATFORMS}  --push --pull                                                                                             --cache-from=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }} -t $QU_REGISTRY_IMAGE  -f Dockerfile .
 
       - name: show files
 #        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
