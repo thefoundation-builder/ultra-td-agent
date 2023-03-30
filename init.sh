@@ -43,7 +43,9 @@ server {
 }
 ' > /etc/nginx/http.d/default.conf
 
-nginx -T
+nginx -T || echo failed nginx conf
+nginx -t || sleep 2
+nginx -t || exit 1
 
 
 test -e /config || mkdir /config
