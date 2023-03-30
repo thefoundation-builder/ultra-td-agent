@@ -20,11 +20,8 @@ AUTHPW=$(for rounds in $(seq 1 24);do cat /dev/urandom |tr -cd '[:alnum:]_\-.'  
 
 echo ' ## auto-generated nginx config
 upstream fluentbackend {
-
   server 127.0.0.1:7777;
-
   keepalive 32;
-
 }
 server {
 	listen 80 default_server;
