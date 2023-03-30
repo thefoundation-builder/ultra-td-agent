@@ -147,18 +147,19 @@ while (true);do
 	echo "logging 2 influx"
 	test -e /tmp/err.agent || mkfifo /tmp/err.agent
 	test -e /tmp/out.agent || mkfifo /tmp/out.agent
-	( 
-         influx_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
+	(    outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
 		 cat /tmp/out.agent | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
     LOGGER_AGENT_OUT_PID=$?;
-	( 
-         agenterrinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
+    (     agenterrinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
 		 cat /tmp/err.agent| bash /etc/bash-logger/log-to-influxdb2.sh $agenterrinflux_opts  ) &
     LOGGER_AGENT_ERR_PID=$?;
-   )
-	fluentd -c /config/fluentd.conf 2>/tmp/err.nginx 1>/tmp/out.nginx 
+   
+	fluentd -c /config/fluentd.conf 2>/tmp/err.agent 1>/tmp/out.agent 
+    
 	kill $LOGGER_AGENT_OUT_PID $LOGGER_AGENT_ERR_PID
-   )
+
+    ) ## end influx
+   
    sleep 3
 done ) & 
 
