@@ -19,9 +19,10 @@ server {
 		proxy_set_header Accept-Encoding "";
 		proxy_set_header Authorization "";
 		proxy_set_header Host "127.0.0.1";
+		proxy_set_header Connection "";
+
 		if ($request_method = POST) {
 		proxy_pass http://fluentbackend;
-		proxy_set_header Connection "";
         proxy_http_version 1.1;
 
         
