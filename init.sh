@@ -1,5 +1,6 @@
 #!/bin/bash
 
+test -e /etc/bash-logger/log-to-influxdb2.sh || git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger.git
 
 echo ' ## auto-generated nginx config
 upstream fluentbackend {
@@ -109,13 +110,56 @@ AUTHPW=$(for rounds in $(seq 1 24);do cat /dev/urandom |tr -cd '[:alnum:]_\-.'  
 ###' > /caddy/Caddyfile 
 
 
+#URL=$1
+#BUCKET=$2
+#INSECURE=$3
+#TAG=$4
+#AUTH=$5
+#HOST=$6
+#SEVERITY=$7
+
+influx_possible="yes"
+[[ -z "$INFLUXTAG" ]]       && INFLUXTAG=fluentd
+[[ -z "$INFLUXURL" ]]       && influx_possible="no"
+[[ -z "$INFLUXAUTH" ]]      && influx_possible="no"
+[[ -z "$INFLUXINSECURE" ]]  && INFLUXINSECURE=INSECURE
+
+[[ -z "$INFLUXBUCKET" ]]    && INFLUXBUCKET="syslog"
+[[ -z "$INFLUXHOST" ]]      && INFLUXHOST=fluentd.influx.lan
+[[ -z "$SEVERITY" ]]        && SEVERITY=info
+
+test -e /etc/bash-logger/log-to-influxdb2.sh || influx_possible="no"
+
+echo "INFLUX_POSSIBLE=$influx_possible"
+
+
+
 echo starting fluent 
 (
 sleep 0.5
 mkdir /var/cache/fluentd
 chown fluentd:fluentd /var/cache/fluentd
 while (true);do 
-   fluentd -c /config/fluentd.conf;sleep 3
+
+   [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
+   [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
+   [[ "$influx_possible" = "yes" ]] && ( 
+	echo "logging 2 influx"
+	test -e /tmp/err.agent || mkfifo /tmp/err.agent
+	test -e /tmp/out.agent || mkfifo /tmp/out.agent
+	( 
+         influx_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
+		 cat /tmp/out.agent | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
+    LOGGER_AGENT_OUT_PID=$?;
+	( 
+         agenterrinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
+		 cat /tmp/err.agent| bash /etc/bash-logger/log-to-influxdb2.sh $agenterrinflux_opts  ) &
+    LOGGER_AGENT_ERR_PID=$?;
+   )
+	fluentd -c /config/fluentd.conf 2>/tmp/err.nginx 1>/tmp/out.nginx 
+	kill $LOGGER_AGENT_OUT_PID $LOGGER_AGENT_ERR_PID
+   )
+   sleep 3
 done ) & 
 
 #echo starting caddy
@@ -124,4 +168,24 @@ done ) &
 nginx -T
 
 echo starting nginx
-(sleep 0.5; while (true);do nginx -g "daemon off;";sleep 1 ;done)
+(sleep 0.5; while (true);do
+   [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
+   [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
+   [[ "$influx_possible" = "yes" ]] && ( 
+	echo "logging 2 influx"
+	test -e /tmp/err.nginx || mkfifo /tmp/err.nginx
+	test -e /tmp/out.nginx || mkfifo /tmp/out.nginx
+	( 
+         outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
+		 cat /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
+    LOGGER_NGINX_OUT_PID=$?;
+	( 
+         errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
+		 cat /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
+    LOGGER_NGINX_ERR_PID=$?;
+   )
+	nginx -g "daemon off;"  2>/tmp/err.nginx 1>/tmp/out.nginx 
+	kill $LOGGER_NGINX_OUT_PID $LOGGER_NGINX_ERR_PID
+   )
+
+ sleep 1 ;done)
