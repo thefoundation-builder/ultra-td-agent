@@ -42,4 +42,5 @@ ENTRYPOINT [ "/init.sh" ]
 RUN mkdir -p /var/www/html/healthcheck && ( echo "OK=ALIVE" > /var/www/html/healthcheck/index.html ) 
 HEALTHCHECK CMD curl -s 127.0.0.1/healtcheck
 VOLUME /config
+RUN date > /etc/_BUILDTIME
 
