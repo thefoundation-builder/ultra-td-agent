@@ -19,6 +19,13 @@ AUTHPW=$(for rounds in $(seq 1 24);do cat /dev/urandom |tr -cd '[:alnum:]_\-.'  
 
 
 echo ' ## auto-generated nginx config
+upstream fluentbackend {
+
+  server 127.0.0.1:7777;
+
+  keepalive 32;
+
+}
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
@@ -30,11 +37,11 @@ server {
 	# Everything is a 404
 	location / {
 		if ($request_method = POST) {
-		proxy_pass http://127.0.0.1:7777;
+		proxy_pass http://fluentbackend;
 		proxy_set_header Connection "";
         proxy_http_version 1.1;
 		proxy_set_header Accept-Encoding "";
-		proxy_set_header Authenticatoin "";
+		proxy_set_header Authorization "";
 		proxy_set_header Host "127.0.0.1";
         
 		}
