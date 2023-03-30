@@ -23,14 +23,12 @@ server {
         proxy_http_version 1.1;
 
 		if ($request_method = POST) {
-		proxy_pass http://fluentbackend;
-
-        
+		    proxy_pass http://fluentbackend;
 		}
 		if ($request_method = GET) {
 			root /var/www/html/healthcheck;
 		}
-                try_files $uri $uri/ =404;
+        try_files $uri $uri/ =404;
     auth_basic "Restricted Content";
     auth_basic_user_file /etc/nginx/.htpasswd;
 	}
