@@ -28,7 +28,8 @@ default $methloggable;
 map $status $statusloggable {
         #volatile;
 #    ~^[36789]  0;
-    200         0;
+    200         1;
+    204         0;
     301         0;
     302         0;
     499         0; ## client disconnected → HTTP/1.1" 499 → uptime monitors will quit on first keyword and produce tons of 499
