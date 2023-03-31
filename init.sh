@@ -214,7 +214,7 @@ while (true);do
     echo "logging fluent 2 influx"
 	test -e /tmp/err.agent || mkfifo /tmp/err.agent
 	test -e /tmp/out.agent || mkfifo /tmp/out.agent
-	(   
+	   
         (
         agenterrinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
 		 tail -qF /tmp/err.agent |cat| bash /etc/bash-logger/log-to-influxdb2.sh $agenterrinflux_opts  ) &
@@ -240,9 +240,7 @@ echo $(date) starting nginx
    [[ "$influx_possible" = "yes" ]] && ( 
 	test -e /tmp/err.nginx || mkfifo /tmp/err.nginx
 	test -e /tmp/out.nginx || mkfifo /tmp/out.nginx
-    (  
-        (   
-        errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} error"
+    (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} error"
 		tail -qF /tmp/err.nginx ||cat| bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
     LOGGER_NGINX_ERR_PID=$?;
     outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
