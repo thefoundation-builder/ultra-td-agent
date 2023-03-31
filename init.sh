@@ -145,7 +145,7 @@ mkdir /var/cache/fluentd
 chown fluentd:fluentd /var/cache/fluentd
 while (true);do 
 
-   [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
+   [[ "$influx_possible" = "yes" ]] || fluentd -c /config/fluentd.conf;
    [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
    [[ "$influx_possible" = "yes" ]] && ( 
 	echo "logging 2 influx"
