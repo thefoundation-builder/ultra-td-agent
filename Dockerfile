@@ -42,7 +42,7 @@ ENTRYPOINT [ "/init.sh" ]
 RUN mkdir -p /var/www/html/healthcheck && ( echo "OK=ALIVE" > /var/www/html/healthcheck/index.html ) 
 HEALTHCHECK CMD curl -s 127.0.0.1/healtcheck
 VOLUME /config
-RUN git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger.git
+RUN git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger
 
 RUN date > /etc/_BUILDTIME
 
