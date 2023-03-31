@@ -169,7 +169,8 @@ done ) &
 #nginx -T
 
 echo starting nginx
-(sleep 0.5; while (true);do
+
+	sleep 0.5; while (true);do
    [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
    [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
    [[ "$influx_possible" = "yes" ]] && ( 
@@ -187,5 +188,4 @@ echo starting nginx
 	kill $LOGGER_NGINX_OUT_PID $LOGGER_NGINX_ERR_PID
    )
 
- sleep 2 
-  ;done)
+ sleep 2   ;done 
