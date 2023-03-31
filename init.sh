@@ -177,10 +177,10 @@ echo starting nginx
 	test -e /tmp/err.nginx || mkfifo /tmp/err.nginx
 	test -e /tmp/out.nginx || mkfifo /tmp/out.nginx
     (   outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
-		 cat /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
+		 tail -qF /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
     LOGGER_NGINX_OUT_PID=$?;
     (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
-		 cat /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
+		 tail -qF /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
     LOGGER_NGINX_ERR_PID=$?;
 	echo "logging 2 influx"
 
