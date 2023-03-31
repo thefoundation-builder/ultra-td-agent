@@ -244,9 +244,12 @@ done ) &
 #(sleep 0.5; cd /caddy;while (true);do su -s /bin/bash -c "caddy run" caddy ;sleep 1 ;done)
 #nginx -T
 
-
+[[ -z "$STATSBUCKET" ]] && STATSBUCKET=stats
 echo $(date) starting nginx
-
+   [[ "$influx_possible" = "yes" ]] && ( 
+    statsinflux_opts=" $INFLUXURL $STATSBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
+    bash /etc/nginx-status2influx.sh $statsinflux_opts & 
+   )
 	sleep 0.5; while (true);do
    [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
    [[ "$influx_possible" = "yes" ]] && ( 
