@@ -97,7 +97,6 @@ server {
 		proxy_set_header Host "127.0.0.1";
 		proxy_set_header Connection "";
         proxy_http_version 1.1;
-
 		if ($request_method = POST) {
 		    proxy_pass http://fluentbackend;
 		}
@@ -105,8 +104,8 @@ server {
 			root /var/www/html/healthcheck;
 		}
         try_files $uri $uri/ =404;
-    auth_basic "Restricted Content";
-    auth_basic_user_file /etc/nginx/.htpasswd;
+        auth_basic "Restricted Content";
+        auth_basic_user_file /etc/nginx/.htpasswd;
 	}
         
 
