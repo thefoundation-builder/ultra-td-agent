@@ -61,6 +61,9 @@ error_log    /dev/stderr warn ;
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
+	location = /healthcheck {
+		rewrite ^(.*[^/])$ $1/ permanent;
+	}
 	location /healthcheck {
 		root /var/www/html;
 	}
