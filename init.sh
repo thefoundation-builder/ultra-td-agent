@@ -62,13 +62,21 @@ error_log    /dev/stderr warn ;
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
-    
+
 	##location = /healthcheck {
 	##	rewrite ^(.*[^/])$ $1/ permanent;
 	##}
-	location /healthcheck {
-		root /var/www/html;
-	}
+	#location /healthcheck {
+	#	root /var/www/html;
+	#}
+    location = /healthcheck {    
+        add_header Content-Type text/plain;
+        return 200 'OK=ALIVE';
+        }
+    location /healthcheck/ {    
+        add_header Content-Type text/plain;
+        return 200 'OK=ALIVE';
+        }
     access_log /dev/stdout;
     error_log /dev/stderr;
 	# Everything is a 404
