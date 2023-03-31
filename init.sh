@@ -173,18 +173,15 @@ echo starting nginx
    [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
    [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
    [[ "$influx_possible" = "yes" ]] && ( 
+    (   outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
+		 cat /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
+    LOGGER_NGINX_OUT_PID=$?;
+    (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
+		 cat /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
+    LOGGER_NGINX_ERR_PID=$?;
 	echo "logging 2 influx"
 	test -e /tmp/err.nginx || mkfifo /tmp/err.nginx
 	test -e /tmp/out.nginx || mkfifo /tmp/out.nginx
-	( 
-         outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
-		 cat /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
-    LOGGER_NGINX_OUT_PID=$?;
-	( 
-         errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
-		 cat /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
-    LOGGER_NGINX_ERR_PID=$?;
-   )
 	nginx -g "daemon off;"  2>/tmp/err.nginx 1>/tmp/out.nginx 
 	kill $LOGGER_NGINX_OUT_PID $LOGGER_NGINX_ERR_PID
    )
