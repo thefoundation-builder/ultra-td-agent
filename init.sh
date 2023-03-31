@@ -215,9 +215,22 @@ echo "INFLUX_POSSIBLE=$influx_possible"
 echo $(date) starting fluent 
 (
 sleep 0.5
-mkdir /var/cache/fluentd
-chown fluentd:fluentd /var/cache/fluentd
+cachepaths=$(
+    (
+        ## from config, only absolute (starting with / ) 
+     echo /var/cache/{fluentd,td-agent}/{s3,influxdb,influxdb2,buffer,cach,smtp};
+        ## defaults
+    grep "path " /config/fluentd.conf |sed 's/^ \+//g;s/^\t\+//g'|grep ^path|sed 's/path \+//g;s/path\t\+//g'|grep ^/
+    ) |sort -u 
+)
 
+for cachepath in $cachepaths ;do 
+(
+  mkdir ${cachepath}
+  chown fluentd:fluentd ${cachepath}  
+)
+
+done 
 
 while (true);do 
 
