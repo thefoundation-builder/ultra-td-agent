@@ -186,4 +186,5 @@ echo starting nginx
 	kill $LOGGER_NGINX_OUT_PID $LOGGER_NGINX_ERR_PID
    )
 
- sleep 1 ;done)
+ sleep 2 
+  ;done)
