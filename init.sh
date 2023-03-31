@@ -3,10 +3,7 @@
 test -e /etc/bash-logger/log-to-influxdb2.sh || git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger
 
 echo ' ## auto-generated nginx config
-upstream fluentbackend {
-  server 127.0.0.1:7777;
-  keepalive 32;
-}
+
 map $request_method $methloggable {
        # volatile;
 #default       $statusloggable;
@@ -59,6 +56,10 @@ access_log    /dev/stdout main if=$loggable;
 #error_log    /dev/stderr warn if=$errorloggable;
 error_log    /dev/stderr warn ;
 
+upstream fluentbackend {
+  server 127.0.0.1:7777;
+  keepalive 32;
+}
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
@@ -80,6 +81,7 @@ server {
     location /healthcheck {    
         add_header Content-Type text/plain;
         return 200 "OK=ALIVE";
+        
         }
 
     location /nginx_status {
@@ -88,8 +90,6 @@ server {
         deny all;
         access_log /dev/null;
     }
-    access_log /dev/stdout;
-    error_log /dev/stderr;
 	# Everything is a 404
 	location / {
 		proxy_set_header Accept-Encoding "";
