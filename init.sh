@@ -246,10 +246,10 @@ done ) &
 
 [[ -z "$STATSBUCKET" ]] && STATSBUCKET=stats
 echo $(date) starting nginx
-   [[ "$influx_possible" = "yes" ]] && ( 
+   [[ "$influx_possible" = "yes" ]] && test -e /etc/nginx-status2influx.sh &&   ( 
     statsinflux_opts=" $INFLUXURL $STATSBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
-    bash /etc/nginx-status2influx.sh $statsinflux_opts & 
-   )
+    (sleep 10 ;bash /etc/nginx-status2influx.sh $statsinflux_opts ) & 
+   ) & 
 	sleep 0.5; while (true);do
    [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
    [[ "$influx_possible" = "yes" ]] && ( 
