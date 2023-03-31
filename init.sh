@@ -1,6 +1,6 @@
 #!/bin/bash
 
-test -e /etc/bash-logger/log-to-influxdb2.sh || git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger.git
+test -e /etc/bash-logger/log-to-influxdb2.sh || git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger
 
 echo ' ## auto-generated nginx config
 upstream fluentbackend {
@@ -138,7 +138,7 @@ echo "INFLUX_POSSIBLE=$influx_possible"
 [[ -z "$INFLUXURL" ]]       && echo NO INFLUX URL
 [[ -z "$INFLUXAUTH" ]]       && echo NO INFLUX AUTH
 
-echo starting fluent 
+echo $(date) starting fluent 
 (
 sleep 0.5
 mkdir /var/cache/fluentd
@@ -173,7 +173,7 @@ done ) &
 #nginx -T
 
 
-echo starting nginx
+echo $(date) starting nginx
 
 	sleep 0.5; while (true);do
    [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
