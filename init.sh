@@ -205,11 +205,8 @@ echo $(date) starting fluent
 sleep 0.5
 mkdir /var/cache/fluentd
 chown fluentd:fluentd /var/cache/fluentd
-while (true);do 
 
-   [[ "$influx_possible" = "yes" ]] || fluentd -c /config/fluentd.conf;
-   [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
-   [[ "$influx_possible" = "yes" ]] && ( 
+[[ "$influx_possible" = "yes" ]] && { 
 	echo "logging 2 influx"
 	test -e /tmp/err.agent || mkfifo /tmp/err.agent
 	test -e /tmp/out.agent || mkfifo /tmp/out.agent
@@ -218,12 +215,14 @@ while (true);do
     LOGGER_AGENT_OUT_PID=$?;
     (     agenterrinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
 		 cat /tmp/err.agent| bash /etc/bash-logger/log-to-influxdb2.sh $agenterrinflux_opts  ) &
-    LOGGER_AGENT_ERR_PID=$?;
-   
-	fluentd -c /config/fluentd.conf 2>/tmp/err.agent 1>/tmp/out.agent 
-    
-	kill $LOGGER_AGENT_OUT_PID $LOGGER_AGENT_ERR_PID
+    LOGGER_AGENT_ERR_PID=$? ; } ;
 
+while (true);do 
+
+   [[ "$influx_possible" = "yes" ]] || fluentd -c /config/fluentd.conf;
+   [[ "$influx_possible" = "yes" ]] && echo "logging fluent 2 influx"
+   [[ "$influx_possible" = "yes" ]] && ( 
+	fluentd -c /config/fluentd.conf 2>/tmp/err.agent 1>/tmp/out.agent 
     ) ## end influx
    
    sleep 3
@@ -249,10 +248,12 @@ echo $(date) starting nginx
     (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
 		 tail -qF /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
     LOGGER_NGINX_ERR_PID=$?;
-	echo "logging 2 influx"
+	echo "logging nginx 2 influx"
 
 	nginx -g "daemon off;"  2>/tmp/err.nginx 1>/tmp/out.nginx 
 	kill $LOGGER_NGINX_OUT_PID $LOGGER_NGINX_ERR_PID
    )
 
  sleep 2   ;done 
+
+kill $LOGGER_AGENT_OUT_PID $LOGGER_AGENT_ERR_PID
