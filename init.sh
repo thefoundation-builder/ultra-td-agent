@@ -25,7 +25,7 @@ default $methloggable;
 map $status $statusloggable {
         #volatile;
 #    ~^[36789]  0;
-    200         1;
+    200         0;
     204         0;
     301         0;
     302         0;
