@@ -170,24 +170,4 @@ done ) &
 #(sleep 0.5; cd /caddy;while (true);do su -s /bin/bash -c "caddy run" caddy ;sleep 1 ;done)
 #nginx -T
 
-echo starting nginx
-
-	sleep 0.5; while (true);do
-   [[ "$influx_possible" = "yes" ]] || nginx -g "daemon off;";
-   [[ "$influx_possible" = "yes" ]] && echo "logging 2 influx"
-   [[ "$influx_possible" = "yes" ]] && ( 
-	test -e /tmp/err.nginx || mkfifo /tmp/err.nginx
-	test -e /tmp/out.nginx || mkfifo /tmp/out.nginx
-    (   outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
-		 tail -qF /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
-    LOGGER_NGINX_OUT_PID=$?;
-    (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
-		 tail -qF /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
-    LOGGER_NGINX_ERR_PID=$?;
-	echo "logging 2 influx"
-
-	nginx -g "daemon off;"  2>/tmp/err.nginx 1>/tmp/out.nginx 
-	kill $LOGGER_NGINX_OUT_PID $LOGGER_NGINX_ERR_PID
-   )
-
- sleep 2   ;done 
+	nginx -g "daemon off;"  
