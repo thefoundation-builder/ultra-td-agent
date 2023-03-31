@@ -105,9 +105,10 @@ server {
 	}
 }
 ' > /etc/nginx/http.d/default.conf
-
-nginx -T || echo failed nginx conf
-nginx -t || sleep 2
+nginx -t || ( nginx -T
+             echo failed nginx conf
+             sleep 2
+            )
 nginx -t || exit 1
 
 
