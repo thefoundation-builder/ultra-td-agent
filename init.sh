@@ -75,8 +75,19 @@ server {
         }
     location /healthcheck/ {    
         add_header Content-Type text/plain;
-        return 200 'OK=ALIVE';
+        return 200 "OK=ALIVE";
         }
+    location /healthcheck {    
+        add_header Content-Type text/plain;
+        return 200 "OK=ALIVE";
+        }
+
+    location /nginx_status {
+        stub_status;
+        allow 127.0.0.1;
+        deny all;
+        access_log /dev/null;
+    }
     access_log /dev/stdout;
     error_log /dev/stderr;
 	# Everything is a 404
