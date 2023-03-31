@@ -46,7 +46,7 @@ nginx_stats=$(curl -s 127.0.0.1/nginx_status)
 gen_influx_value nginx_active_connections   $(echo "$nginx_stats" | awk '/^Active connections:/{print $3}')
 #echo accepts handled requests
 
-secondsrun=$(( $(date +$s) - $(cat /dev/shm/.nginx_status_start_time)  ))
+secondsrun=$(( $(date -u +%s) - $(cat /dev/shm/.nginx_status_start_time)  ))
 [[ "$secondsrun" = "0" ]] && secondsrun=1 # prevent zero division
 
 gen_influx_value nginx_connections_accepted $( echo "$nginx_stats"|head -n3|tail -n1|cut -d" " -f2);
