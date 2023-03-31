@@ -7,9 +7,58 @@ upstream fluentbackend {
   server 127.0.0.1:7777;
   keepalive 32;
 }
+map $request_method $methloggable {
+       # volatile;
+#default       $statusloggable;
+default       0;
+POST          1;
+OPTIONS       1;
+GET           1;
+PUT           1;
+}
+map $http_user_agent $ualoggable {
+       # volatile;
+
+~Pingdom 0;
+~Amazon-Route53 0;
+~kube-check 0;
+default $methloggable;
+
+}
+map $status $statusloggable {
+        #volatile;
+#    ~^[36789]  0;
+    200         0;
+    301         0;
+    302         0;
+    499         0; ## client disconnected → HTTP/1.1" 499 → uptime monitors will quit on first keyword and produce tons of 499
+    default    $ualoggable;
+}
+map $request_uri $urlregxloggable {
+      #  volatile;
+    (.*?)healthcheck(.*?) 0;
+    (.*?)ip_info(.*?)     1;
+    default $statusloggable;
+    }
+map $request_uri $loggable {
+  /ping                      0;
+  /healthcheck.html          0;
+  /healthcheck               0;
+  /healthcheck_full          1;
+  /ip_info                   1;
+
+  default $urlregxloggable;
+}
+
+map $status $errorloggable {
+    499        0; ## client disconnected → HTTP/1.1" 499 → uptime monitors will quit on first keyword and produce tons of 499
+    default    1;
+}
+access_log    /dev/stdout main if=$loggable;
+#error_log    /dev/stderr warn if=$errorloggable;
+error_log    /dev/stderr warn ;
+
 server {
-	access_log /dev/stdout;
-	error_log /dev/stderr;
 	listen 80 default_server;
 	listen [::]:80 default_server;
 	location /healthcheck {
