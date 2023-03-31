@@ -117,6 +117,8 @@ AUTHPW=$(for rounds in $(seq 1 24);do cat /dev/urandom |tr -cd '[:alnum:]_\-.'  
 #AUTH=$5
 #HOST=$6
 #SEVERITY=$7
+[[ -z "$INFLUXURL" ]]       && echo NO INFLUX URL
+[[ -z "$INFLUXAUTH" ]]       && echo NO INFLUX AUTH
 
 influx_possible="yes"
 [[ -z "$INFLUXTAG" ]]       && INFLUXTAG=fluentd
