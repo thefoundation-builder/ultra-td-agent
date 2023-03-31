@@ -29,7 +29,7 @@ RUN apk --update add --no-cache --virtual .build-deps build-base libc-dev ruby-d
 
 #        gem install fluent-plugin-collectd-influxdb && \
 #        gem install fluent-plugin-collectd-concat && \
-RUN apk --update add --no-cache bash curl nano jq nginx git apache2-utils
+RUN apk --update add --no-cache bash curl nano jq nginx git apache2-utils coreutils procps 
 
 
 ## setup 
