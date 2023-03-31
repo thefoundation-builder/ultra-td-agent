@@ -242,10 +242,10 @@ echo $(date) starting nginx
    [[ "$influx_possible" = "yes" ]] && ( 
 	test -e /tmp/err.nginx || mkfifo /tmp/err.nginx
 	test -e /tmp/out.nginx || mkfifo /tmp/out.nginx
-    (   outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
+    (   outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
 		 tail -qF /tmp/out.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
     LOGGER_NGINX_OUT_PID=$?;
-    (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
+    (   errinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_nginx ${INFLUXAUTH} ${INFLUXHOST} error"
 		 tail -qF /tmp/err.nginx | bash /etc/bash-logger/log-to-influxdb2.sh $errinflux_opts  ) &
     LOGGER_NGINX_ERR_PID=$?;
 	echo "logging nginx 2 influx"
