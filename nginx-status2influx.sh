@@ -54,6 +54,7 @@ gen_influx_value nginx_connections_handled  $( echo "$nginx_stats"|head -n3|tail
 gen_influx_value nginx_connections_requests $( echo "$nginx_stats"|head -n3|tail -n1|cut -d" " -f4);
 gen_influx_value nginx_stats_per_second_requests    $(( $( echo "$nginx_stats"|head -n3|tail -n1|cut -d" " -f2) / $secondsrun )) ;
 gen_influx_value nginx_stats_per_second_connections $(( $( echo "$nginx_stats"|head -n3|tail -n1|cut -d" " -f4) / $secondsrun )) ;
+gen_influx_value nginx_stats_uptime $secondsrun ;
 
 gen_influx_value nginx_reading $(echo "$nginx_stats" | awk '/^Reading:/{print $2}')
 gen_influx_value nginx_writing $(echo "$nginx_stats" | awk '/^Reading:/{print $4}')
