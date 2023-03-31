@@ -40,7 +40,7 @@ COPY init.sh /
 RUN chmod +x /init.sh
 ENTRYPOINT [ "/init.sh" ]
 RUN mkdir -p /var/www/html/healthcheck && ( echo "OK=ALIVE" > /var/www/html/healthcheck/index.html ;cp /var/www/html/healthcheck/index.html /var/www/html/healthcheck.html ) 
-HEALTHCHECK CMD curl -s 127.0.0.1/healtcheck
+HEALTHCHECK CMD curl -s 127.0.0.1/healthcheck
 VOLUME /config
 RUN git clone https://gitlab.com/the-foundation/bash-logger.git /etc/bash-logger
 COPY nginx-status2influx.sh /etc/nginx-status2influx.sh
