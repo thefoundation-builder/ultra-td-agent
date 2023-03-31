@@ -211,10 +211,10 @@ chown fluentd:fluentd /var/cache/fluentd
 	test -e /tmp/err.agent || mkfifo /tmp/err.agent
 	test -e /tmp/out.agent || mkfifo /tmp/out.agent
 	(    outinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} ${SEVERITY}"
-		 cat /tmp/out.agent | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
+		 tail -qF /tmp/out.agent | bash /etc/bash-logger/log-to-influxdb2.sh $outinflux_opts  ) &
     LOGGER_AGENT_OUT_PID=$?;
     (     agenterrinflux_opts=" $INFLUXURL $INFLUXBUCKET TRUE ${INFLUXTAG}_agent ${INFLUXAUTH} ${INFLUXHOST} error"
-		 cat /tmp/err.agent| bash /etc/bash-logger/log-to-influxdb2.sh $agenterrinflux_opts  ) &
+		 tail -qF /tmp/err.agent | bash /etc/bash-logger/log-to-influxdb2.sh $agenterrinflux_opts  ) &
     LOGGER_AGENT_ERR_PID=$? ; } ;
 
 while (true);do 
