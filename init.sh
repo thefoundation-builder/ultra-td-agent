@@ -226,7 +226,7 @@ cachepaths=$(
 
 for cachepath in $cachepaths ;do 
 (
-  mkdir ${cachepath}
+  mkdir -p ${cachepath}
   chown fluentd:fluentd ${cachepath}  
 )
 
